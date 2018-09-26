@@ -69,4 +69,33 @@ setup git email:
     - mode: 755
 {% endfor %}
 
+add jenkins agent:
+  file.managed:
+    - user: jenkins
+    - group: jenkins
+    - source: https://jenkins.lineageos.org/jnlpJars/agent.jar
+    - skip_verify: True
+    - name: /home/jenkins/agent.jar
 
+/etc/systemd/system/jenkins.service:
+  file.managed:
+    - user: root
+    - group: root
+    - template: jinja
+    - source: salt://build/files/jenkins.service
+    - defaults:
+        name: invalid
+        key: invalid
+    - context:
+        name: {{ pillar.jenkins.name }}
+        key: {{ pillar.jenkins.key }}
+
+service.systemctl_reload:
+  module.run:
+    - onchanges:
+      - file: /etc/systemd/system/jenkins.service
+
+start/enable jenkins:
+  service.running:
+    - name: jenkins
+    - enable: True

@@ -1,0 +1,14 @@
+[Unit]
+Description=Jenkins Agent
+Wants=network.target
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /home/jenkins/agent.jar -jnlpUrl https://jenkins.lineageos.org/computer/{{name}}/slave-agent.jnlp -secret {{key}} -workDir "/home/jenkins"
+User=jenkins
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
