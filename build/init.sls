@@ -26,6 +26,7 @@ dependencies:
       - libxml2
       - libxml2-utils
       - lzop
+      - openjdk-8-jdk
       - pngcrush
       - rsync
       - schedtool
@@ -60,13 +61,20 @@ setup git email:
     - global: true
     - name: user.email
     - value: infra@lineageos.org
-
-{% for dir in ['/lineage', '/lineage/cm-14.1', '/lineage/lineage-15.1', '/lineage/cm-14.1/.repo/local_manifests', '/lineage/lineage-15.1/.repo/local_manifests'] %}
-{{dir}}:
+/lineage:
   file.directory:
     - user: jenkins
     - group: jenkins
     - mode: 755
+
+{% for ver in ['cm-14.1', 'lineage-15.1'] %}
+{% for dir in ['/', '/.repo', '/.repo/local_manifests'] %}
+/lineage/{{ver}}{{dir}}:
+  file.directory:
+    - user: jenkins
+    - group: jenkins
+    - mode: 755
+{% endfor %}
 {% endfor %}
 
 add jenkins agent:

@@ -1,3 +1,5 @@
 base:
+  '*':
+    - base
   'build*':
     - build
